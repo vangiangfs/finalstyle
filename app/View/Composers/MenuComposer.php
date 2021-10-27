@@ -19,7 +19,12 @@ class MenuComposer
      */
     public function compose(View $view)
     {
-        $menus = MenusCmsModel::get();
+        $menus = MenusCmsModel::get()->keyBy('id');
+        foreach($menus as $key=>$val){
+            if(!$val->parent_id)
+                continue;
+            $menus[$val->parent_id]->number_children++;
+        }
         $view->with('menus', $menus);
     }
 }

@@ -9,14 +9,19 @@ class Helper{
             $html = '<ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">';
         foreach($menus as $key=>$menu){
             if($menu->parent_id == $parent_id){
+                $link = '#';
+                if($menu->module)
+                    $link = '/'.env('APP_CMS_PATH').'/'.$menu->module;
+
                 $html .= '
                 <li class="nav-item">
-                    <a href="pages/layout/top-nav.html" class="nav-link">
+                    <a href="'.$link.'" class="nav-link">
                         <i class="'.$menu->icon.' nav-icon"></i>
-                        <p>'.$menu->title.'</p>
+                        <p>'.$menu->title.($menu->number_children?'<i class="right fas fa-angle-left"></i>':'').'</p>
                     </a>';
                 unset($menus[$key]);
-                $html .= self::menus_cms($menus, $menu->id);
+                if($menu->number_children)
+                    $html .= self::menus_cms($menus, $menu->id);
                 $html .= '</li>';
             }
         }
@@ -24,7 +29,6 @@ class Helper{
         return $html;
     }
 
-    public static function list($data){
-
+    public static function list($listfield, $data){
     }
 }
